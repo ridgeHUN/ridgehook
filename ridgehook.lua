@@ -42,7 +42,7 @@ local menu
 do
 	local library = loadstring(game:HttpGet("https://pastebin.com/raw/eVbzAZdc"))()
 
-	menu = library.new([[ridge <font color="rgb(235, 99, 14)">HUN</font>]], "nemv2\\")
+	menu = library.new([[ridge <font color="rgb(235, 99, 14)">HOOK</font>]], "nemv2\\")
 	local tabs = {
 		menu.new_tab("http://www.roblox.com/asset/?id=7300477598"),
 		menu.new_tab("http://www.roblox.com/asset/?id=7300535052"),
