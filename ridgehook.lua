@@ -14,7 +14,6 @@ RunService.RenderStepped:Connect(function()
 	LocalPlayer.Character.CamControl.Disabled = true
 end)
 
-
 local function Create(Object, Properties, Parent)
 	local Obj = Instance.new(Object)
 
@@ -380,6 +379,106 @@ do
 				end
 			end)
 		end)
+		
+		disablers.element("Button", "kill aura", nil, function()
+			local Players = game:GetService("Players")
+			local RunSerivce = game:GetService("RunService")
+
+			local Player = Players.LocalPlayer
+			local Character = Player.Character or Player.CharacterAdded:Wait()
+			local HumanoidRootPart = Character.HumanoidRootPart
+
+			local DamageRemote = game:GetService("ReplicatedStorage").Events.DamageRequest
+
+			_G.KillAura = true
+
+			local ignorelist = {
+				Character.Name
+			}
+
+			local function calDamage()
+				for _,v in pairs(Players:GetPlayers()) do 
+
+					--if v ~= game.Players.LocalPlayer then
+					--	RunSerivce.Stepped:Connect(function()
+					--		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(0,0,-3)
+					--		wait(3)
+					--	end)
+					-- end
+
+					if Character:FindFirstChildWhichIsA("Tool") then
+						if table.find(ignorelist, v.Name) then
+						else
+							local hitCharacter = v.Character
+							if hitCharacter then
+								local pos = (v.Character.HumanoidRootPart.Position - HumanoidRootPart.Position).Magnitude
+								if pos < 25 then
+									DamageRemote:FireServer("BatonHit", game:GetService("Players")[v.Name], "Knife" )
+								end
+							end
+						end
+					end
+				end
+			end
+
+			while true do
+				task.wait(0.03)
+				if _G.KillAura == true then
+					calDamage()
+				end
+			end
+
+		end)
+		
+		disablers.element("Button", "kill all", nil, function()
+			local Players = game:GetService("Players")
+			local RunSerivce = game:GetService("RunService")
+
+			local Player = Players.LocalPlayer
+			local Character = Player.Character or Player.CharacterAdded:Wait()
+			local HumanoidRootPart = Character.HumanoidRootPart
+
+			local DamageRemote = game:GetService("ReplicatedStorage").Events.DamageRequest
+
+			_G.KillAura = true
+
+			local ignorelist = {
+				Character.Name
+			}
+
+			local function calDamage()
+				for _,v in pairs(Players:GetPlayers()) do 
+
+					if v ~= game.Players.LocalPlayer then
+						RunSerivce.Stepped:Connect(function()
+							game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(0,0,-3)
+							wait(3)
+						end)
+					 end
+
+					if Character:FindFirstChildWhichIsA("Tool") then
+						if table.find(ignorelist, v.Name) then
+						else
+							local hitCharacter = v.Character
+							if hitCharacter then
+								local pos = (v.Character.HumanoidRootPart.Position - HumanoidRootPart.Position).Magnitude
+								if pos < 25 then
+									DamageRemote:FireServer("BatonHit", game:GetService("Players")[v.Name], "Knife" )
+								end
+							end
+						end
+					end
+				end
+			end
+
+			while true do
+				task.wait(0.03)
+				if _G.KillAura == true then
+					calDamage()
+				end
+			end
+
+		end)
 
 		local vehiclemods = misc.new_sector("vehicle modifications", "Right")
 		vehiclemods.element("Toggle", "suspension"):add_keybind()
@@ -401,7 +500,9 @@ do
 		character.element("Slider", "power", {default = {min = 50, max = 200, default = 50}})
 		character.element("Slider", "height", {default = {min = 7, max = 50, default = 15}})
 		character.element("Toggle", "noclip"):add_keybind()
-
+		
+		
+			
 		local NoclipLoop = RunService.Stepped:Connect(function()
 			if not LocalPlayer.Character then return end
 			if not menu.values[4].misc.character.noclip.Toggle and not menu.values[4].misc.character["$noclip"].Toggle then return end
